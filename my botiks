@@ -1,0 +1,90 @@
+#from settings import settings
+import discord
+from discord.ext import commands
+
+import random
+# import * - это тоже самое, что перечислить все файлы
+#from bot_logic import *
+
+# Переменная intents - хранит привилегии бота
+intents = discord.Intents.default()
+# Включаем привелегию на чтение сообщений
+intents.message_content = True
+# Создаем бота в переменной client и передаем все привелегии
+bot = commands.Bot(command_prefix='$', intents=intents)
+
+def gen_pass(pass_length):
+    elements = "+-/*!&$#?=@<>"
+    password = ""
+
+    for i in range(pass_length):
+        password += random.choice(elements)
+
+    return password
+
+
+def gen_emodji():
+    emodji = ["\U0001f600", "\U0001f642", "\U0001F606", "\U0001F923"]
+    return random.choice(emodji)
+
+
+def flip_coin():
+    flip = random.randint(0, 2)
+    if flip == 0:
+        return "ОРЕЛ"
+    else:
+        return "РЕШКА"
+    
+def gen_movie():
+    movies = ["avengers", "toy story", "titanic", "kingsman"]
+    return random.choice(movies)
+
+def gen_redbook():
+    redbook = ['Зубр', 'Шлемоносный казуар', 'Гавиал', 'Большая панда', 'Снежный барс', 'Лошади Пржевальского', 'Горные гориллы', 'Амурский тигр', 'Яванский носорог']
+    return random.choice(redbook)
+    
+# Когда бот будет готов, он напишет в консоли свое название!
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Привет! Я бот {bot.user}!')
+
+@bot.command()
+async def smile(ctx):
+    await ctx.send(gen_emodji())
+
+@bot.command()
+async def coin(ctx):
+    await ctx.send(flip_coin())
+
+@bot.command()
+async def password(ctx, count = 10):
+    await ctx.send(gen_pass(count))
+
+@bot.command()
+async def movie(ctx):
+    await ctx.send(gen_movie())
+    
+@bot.command()
+async def mem(ctx):
+    with open('images/mem1.jpg', 'rb') as f:
+        # В переменную кладем файл, который преобразуется в файл библиотеки Discord!
+        picture = discord.File(f)
+   # Можем передавать файл как параметр!
+    await ctx.send(file=picture)
+
+@bot.command()
+async def okrsredazazavodi(ctx):
+    await ctx.send("В результате производственной деятельности цементного предприятия в окружающую среду выбрасываются такие вещества как сажа, оксиды азота, диоксид серы, оксид углерода, металлы и их соединения. Также происходит загрязнение воды и выброс твердых бытовых отходов (ТБО).")
+
+@bot.command()
+async def redbook(ctx):
+    await ctx.send(gen_redbook())
+
+
+
+
+bot.run("1")
